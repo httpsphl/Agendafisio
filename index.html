@@ -140,8 +140,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 [data-theme="dark"] .b-mob{color:#fb923c}
 .b-out{background:rgba(107,114,128,.13);color:#555}
 [data-theme="dark"] .b-out{color:#9ca3af}
-.del-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;padding:5px;border-radius:6px;font-size:13px;line-height:1;transition:.1s;flex-shrink:0}
-.del-btn:hover{color:var(--danger);background:rgba(248,81,73,.1)}
+.del-btn{background:none;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:600;line-height:1.4;transition:.15s;flex-shrink:0;font-family:inherit}
+.del-btn:hover{color:var(--danger);background:rgba(248,81,73,.1);border-color:var(--danger)}
 
 /* ── LOADING ──────────────────────────────────────────────────────────── */
 .loading-row{display:flex;align-items:center;gap:10px;padding:20px 0;color:var(--text-muted);font-size:13px}
@@ -281,7 +281,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbz91OHv8iHXBRxmHjsmRU-igkNde6xMEQtIgcJ5DKS8nShOJrxg2TfDnpGrFS69Pqw/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbz4ZjaaBZGj3z7QzkkesIYIYnZOISMShwUThZHqcm4M-Y_wK4cSAMk1XYkcOENJk0Za/exec';
 const CACHE_KEY  = 'agfisio_appts_v2';
 const THEME_KEY  = 'agfisio_theme';
 
@@ -406,7 +406,7 @@ async function agendar() {
     id:uid(), paciente:pac, data, hora, servico:svc, duracao:dur, obs,
     diaSemana:DIAS_FULL[dayOfWeek(data)],
     semana:weekNum(data), mes:d.getMonth()+1, ano:d.getFullYear(),
-    ts:new Date().toISOString()
+    ts:new Date().toISOString(), _pending:true
   };
 
   // Otimistic: salva local primeiro
@@ -424,10 +424,18 @@ async function postToSheets(appt) {
   setSync('spin');
   try {
     const body = new URLSearchParams();
-    Object.entries(appt).forEach(([k,v]) => body.append(k, v));
+    Object.entries(appt).forEach(([k,v]) => { if(k!=='_pending') body.append(k,v); });
     await fetch(SHEET_URL, { method:'POST', mode:'no-cors', body });
     setSync('ok');
   } catch(e) { setSync('err'); }
+}
+
+async function deleteFromSheets(id) {
+  if(!SHEET_URL || SHEET_URL.includes('COLE')) return;
+  try {
+    const body = new URLSearchParams({ action:'delete', id });
+    await fetch(SHEET_URL, { method:'POST', mode:'no-cors', body });
+  } catch(e) { /* offline — Sheets vai divergir até próxima sync */ }
 }
 
 // ── FETCH DO SHEETS (JSONP) ────────────────────────────────────────────────
@@ -498,10 +506,14 @@ function fetchFromSheets() {
       ts:        r['Registrado em'] || '',
     })).filter(a => a.paciente && a.data);
 
-    // Merge: Sheets é fonte de verdade; mantém pendentes locais não confirmados
+    // Merge: Sheets é fonte de verdade.
+    // Mantém apenas itens _pending (recém criados, ainda não confirmados pelo Sheets).
+    // Se um ID já apareceu no Sheets antes (não é _pending), e sumiu do Sheets → foi deletado lá → remove do app também.
     const sheetIds = new Set(fromSheet.map(a=>a.id));
-    const localPending = appts.filter(a => !sheetIds.has(a.id));
-    appts = [...fromSheet, ...localPending]
+    const trulyPending = appts.filter(a => a._pending && !sheetIds.has(a.id));
+    // Itens do Sheets que já estavam locais como _pending → agora confirmados → strip flag
+    const confirmed = fromSheet.map(a => ({...a, _pending:false}));
+    appts = [...confirmed, ...trulyPending]
       .sort((a,b)=>(a.data+a.hora).localeCompare(b.data+b.hora));
     saveCache();
 
@@ -571,7 +583,7 @@ function renderAgenda() {
           <div class="card-head">
             <span class="card-name">${a.paciente}</span>
             <span class="card-time">${a.hora}</span>
-            <button class="del-btn" onclick="askDelete('${a.id}')" title="Remover">✕</button>
+            <button class="del-btn" onclick="askDelete('${a.id}')" title="Remover">Cancelar</button>
           </div>
           <div class="card-grid">
             <div class="card-field">
@@ -612,6 +624,7 @@ function askDelete(id) {
 }
 function closeDialog(){ deleteId=null; document.getElementById('overlay').classList.remove('show'); }
 function doDelete(){
+  deleteFromSheets(deleteId);
   appts = appts.filter(a=>a.id!==deleteId);
   saveCache(); closeDialog();
   toast('Agendamento removido');
