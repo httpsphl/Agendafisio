@@ -97,8 +97,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .btn-main:hover{filter:brightness(1.06)}
 .btn-main:active{transform:scale(.99)}
 .btn-main.loading{color:transparent;position:relative}
-.btn-main.loading::after{content:'';position:absolute;width:18px;height:18px;border:2.5px solid #0a0f14;border-top-color:transparent;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);animation:spin .65s linear infinite}
-@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.btn-main.loading::after{content:'';position:absolute;width:18px;height:18px;border:2.5px solid #0a0f14;border-top-color:transparent;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);animation:spin-abs .65s linear infinite}
+@keyframes spin-abs{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes spin-el{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
 /* ── WEEK NAV ─────────────────────────────────────────────────────────── */
 .week-nav{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 13px;margin-bottom:18px;transition:background .2s}
@@ -140,7 +141,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 /* ── LOADING ──────────────────────────────────────────────────────────── */
 .loading-row{display:flex;align-items:center;gap:10px;padding:20px 0;color:var(--text-muted);font-size:13px}
-.spinner{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .65s linear infinite;flex-shrink:0}
+.spinner{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin-el .65s linear infinite;flex-shrink:0}
 .sync-banner{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:14px}
 
 /* ── EMPTY ────────────────────────────────────────────────────────────── */
@@ -247,6 +248,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
   <!-- AGENDA -->
   <div id="view-agenda" class="hidden">
+    <div id="sync-banner" class="sync-banner hidden"><div class="spinner"></div><span>Sincronizando com a planilha...</span></div>
     <div class="week-nav">
       <button class="wbtn" onclick="moveWeek(-1)">&#8249;</button>
       <div class="wk-center">
@@ -431,10 +433,7 @@ function fetchFromSheets() {
   setSync('spin');
 
   // Mostra indicador no topo da agenda
-  const body = document.getElementById('agenda-body');
-  const existing = body.innerHTML;
-  const banner = `<div class="sync-banner"><div class="spinner"></div><span>Sincronizando com a planilha...</span></div>`;
-  body.innerHTML = banner + existing;
+  document.getElementById('sync-banner').classList.remove('hidden');
 
   const cbName = 'agf_cb_' + Date.now();
   const script  = document.createElement('script');
@@ -454,8 +453,7 @@ function fetchFromSheets() {
   }
 
   function removeBanner() {
-    const b = document.querySelector('.sync-banner');
-    if(b) b.remove();
+    document.getElementById('sync-banner').classList.add('hidden');
   }
 
   window[cbName] = function(rows) {
@@ -469,20 +467,31 @@ function fetchFromSheets() {
       return;
     }
 
+    // Normaliza datas: Sheets pode retornar "Mon Apr 14 2026...", DD/MM/YYYY ou YYYY-MM-DD
+    function normDate(s) {
+      if (!s) return '';
+      s = String(s).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s; // já OK
+      const dmy = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      if (dmy) return `${dmy[3]}-${dmy[2].padStart(2,'0')}-${dmy[1].padStart(2,'0')}`;
+      const parsed = new Date(s);
+      if (!isNaN(parsed.getTime())) return parsed.toISOString().split('T')[0];
+      return s;
+    }
     // Mapeia colunas da planilha para o formato do app
     const fromSheet = rows.map(r => ({
-      id:        r['ID']           || '',
-      paciente:  r['Paciente']     || '',
-      data:      r['Data']         || '',
-      hora:      r['Horário']      || '',
-      servico:   r['Serviço']      || '',
-      duracao:   r['Duração']      || '',
-      obs:       r['Observações']  || '',
-      diaSemana: r['Dia da Semana']|| '',
-      semana:    r['Semana']       || '',
-      mes:       r['Mês']          || '',
-      ano:       r['Ano']          || '',
-      ts:        r['Registrado em']|| '',
+      id:        r['ID']            || r['Id']           || '',
+      paciente:  r['Paciente']      || '',
+      data:      normDate(r['Data'] || ''),
+      hora:      r['Horário']       || r['Horario']      || '',
+      servico:   r['Serviço']       || r['Servico']      || '',
+      duracao:   r['Duração']       || r['Duracao']      || '',
+      obs:       r['Observações']   || r['Observacoes']  || '',
+      diaSemana: r['Dia da Semana'] || '',
+      semana:    r['Semana']        || '',
+      mes:       r['Mês']           || r['Mes']          || '',
+      ano:       r['Ano']           || '',
+      ts:        r['Registrado em'] || '',
     })).filter(a => a.paciente && a.data);
 
     // Merge: Sheets é fonte de verdade; mantém pendentes locais não confirmados
@@ -532,11 +541,9 @@ function renderAgenda() {
   const active = days.filter(d=>byDay[d].length>0);
 
   const body = document.getElementById('agenda-body');
-  // Preserve sync banner if present
-  const banner = body.querySelector('.sync-banner');
 
   if(!active.length){
-    body.innerHTML = (banner?banner.outerHTML:'') + `<div class="empty">
+    body.innerHTML = `<div class="empty">
       <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
         <rect x="6" y="10" width="32" height="28" rx="5" stroke="currentColor" stroke-width="1.5"/>
         <path d="M14 6v8M30 6v8M6 20h32M14 29h8M14 33h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -571,7 +578,7 @@ function renderAgenda() {
     </div>`;
   }).join('');
 
-  body.innerHTML = (banner?banner.outerHTML:'') + html;
+  body.innerHTML = html;
 }
 
 // ── DELETE ────────────────────────────────────────────────────────────────
