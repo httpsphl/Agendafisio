@@ -318,7 +318,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast"></div>
 
 <script>
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxMCJgQgZqrLeejx8BMR-DIXnoyAoHDNSfq0DSO-FbrtyDKlaI9zJumMKu_zQRFlRR3/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxim_sUvdbsQB_Sy7WUm7Vw2dUMUAJAlpBEzs-yRvpS1yZA-NnqBarnKYFJ-CUCN9vv/exec';
 const CACHE_KEY = 'agfisio_v3';
 const THEME_KEY = 'agfisio_theme';
 
@@ -498,6 +498,21 @@ function normDate(s){
   const p=new Date(s);if(!isNaN(p))return p.toISOString().split('T')[0];
   return s;
 }
+// Sheets converte "11:00" para Date epoch 1899-12-30. Extrai HH:MM de volta.
+function normTime(s){
+  if(!s)return'';s=String(s).trim();
+  if(/^\d{1,2}:\d{2}$/.test(s))return s.length===4?'0'+s:s;
+  if(s.startsWith('1899')||s.startsWith('1900')){
+    const p=new Date(s);
+    if(!isNaN(p)){return String(p.getUTCHours()).padStart(2,'0')+':'+String(p.getUTCMinutes()).padStart(2,'0');}
+  }
+  return s;
+}
+// Descarta valor se for data-época (campo vazio mal convertido pelo Sheets)
+function normField(s){
+  if(!s)return'';s=String(s).trim();
+  return(s.startsWith('1899')||s.startsWith('1900'))?'':s;
+}
 
 function fetchFromSheets(){
   if(isFetching)return;
@@ -513,8 +528,8 @@ function fetchFromSheets(){
     if(!Array.isArray(rows)||!rows.length){setSync('ok');hideBanner();return;}
     const fromSheet=rows.map(r=>({
       id:r['ID']||'',paciente:r['Paciente']||'',
-      data:normDate(r['Data']||''),hora:r['Horário']||r['Horario']||'',
-      servico:r['Serviço']||r['Servico']||'',duracao:r['Duração']||r['Duracao']||'',
+      data:normDate(r['Data']||''),hora:normTime(r['Horário']||r['Horario']||''),
+      servico:normField(r['Serviço']||r['Servico']||''),duracao:normField(r['Duração']||r['Duracao']||''),
       obs:r['Observações']||r['Observacoes']||'',diaSemana:r['Dia da Semana']||'',
       semana:r['Semana']||'',mes:r['Mês']||r['Mes']||'',ano:r['Ano']||'',
       status:(r['Status']||'aguardando').toLowerCase(),ts:r['Registrado em']||'',
