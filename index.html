@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117" id="meta-theme">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>AgendaFisio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ───────────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --bg:          #0d1117;
+  --surface:     #161b22;
+  --surface2:    #1e2530;
+  --border:      rgba(255,255,255,0.08);
+  --border2:     rgba(255,255,255,0.14);
+  --accent:      #00d4aa;
+  --accent-dim:  rgba(0,212,170,0.12);
+  --accent-dim2: rgba(0,212,170,0.2);
+  --text:        #e6edf3;
+  --text-muted:  #7d8590;
+  --text-dim:    #484f58;
+  --danger:      #f85149;
+  --card-row-a:  #0f1f1c;
+  --card-row-b:  #161b22;
+  --badge-bg:    rgba(0,0,0,0.2);
+  --theme-icon:  "☀";
+}
+[data-theme="light"] {
+  --bg:          #f4f6f8;
+  --surface:     #ffffff;
+  --surface2:    #eef1f4;
+  --border:      rgba(0,0,0,0.08);
+  --border2:     rgba(0,0,0,0.14);
+  --accent:      #00a882;
+  --accent-dim:  rgba(0,168,130,0.1);
+  --accent-dim2: rgba(0,168,130,0.18);
+  --text:        #1a2332;
+  --text-muted:  #5a6a7a;
+  --text-dim:    #9aaabb;
+  --danger:      #d93025;
+  --card-row-a:  #f0fdfb;
+  --card-row-b:  #ffffff;
+  --badge-bg:    rgba(255,255,255,0.6);
+  --theme-icon:  "☾";
+}
+
+/* ── RESET ────────────────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overscroll-behavior:none}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;transition:background .2s,color .2s}
+
+/* ── HEADER ───────────────────────────────────────────────────────────── */
+.header{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:background .2s,border-color .2s}
+.logo{display:flex;align-items:center;gap:9px;flex-shrink:0}
+.logo-icon{width:32px;height:32px;background:var(--accent-dim2);border-radius:9px;display:flex;align-items:center;justify-content:center;border:1px solid var(--accent-dim2)}
+.logo-text{font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--text)}
+.logo-text em{font-style:normal;color:var(--accent)}
+.header-right{display:flex;align-items:center;gap:8px}
+.sync-pill{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:4px 9px;white-space:nowrap}
+.sdot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;transition:background .2s}
+.sdot.spin{animation:blink 1s ease-in-out infinite}
+.sdot.err{background:var(--danger)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* Theme toggle */
+.theme-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0}
+.theme-btn:hover{border-color:var(--border2);color:var(--text)}
+
+/* ── TABS ─────────────────────────────────────────────────────────────── */
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:59px;z-index:99;transition:background .2s}
+.tab{flex:1;padding:11px 8px;text-align:center;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ── MAIN ─────────────────────────────────────────────────────────────── */
+.main{padding:18px 16px;max-width:500px;margin:0 auto;padding-bottom:48px}
+
+/* ── FORM ─────────────────────────────────────────────────────────────── */
+.field{margin-bottom:13px}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.field input,.field select,.field textarea{
+  width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  color:var(--text);font-family:inherit;font-size:15px;padding:11px 13px;outline:none;
+  transition:border-color .12s,box-shadow .12s,background .2s;-webkit-appearance:none;appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.field textarea{min-height:72px;resize:vertical;line-height:1.5}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237d8590' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;cursor:pointer}
+[data-theme="light"] .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6a7a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.field select option{background:var(--surface)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.chip{font-size:12px;padding:3px 10px;border-radius:99px;background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);cursor:pointer;font-family:inherit;transition:.1s}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.btn-main{width:100%;padding:14px;background:var(--accent);border:none;border-radius:10px;color:#0a0f14;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:.12s;margin-top:4px}
+.btn-main:hover{filter:brightness(1.06)}
+.btn-main:active{transform:scale(.99)}
+.btn-main.loading{color:transparent;position:relative}
+.btn-main.loading::after{content:'';position:absolute;width:18px;height:18px;border:2.5px solid #0a0f14;border-top-color:transparent;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);animation:spin .65s linear infinite}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+/* ── WEEK NAV ─────────────────────────────────────────────────────────── */
+.week-nav{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 13px;margin-bottom:18px;transition:background .2s}
+.wbtn{background:none;border:none;color:var(--text-muted);cursor:pointer;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:7px;font-size:20px;transition:.1s;font-family:inherit}
+.wbtn:hover{background:var(--surface2);color:var(--text)}
+.wk-center{text-align:center}
+.wk-label{font-size:13px;font-weight:600;color:var(--text)}
+.wk-sub{font-size:11px;color:var(--text-muted);margin-top:1px}
+
+/* ── AGENDA CARDS ─────────────────────────────────────────────────────── */
+.day-group{margin-bottom:22px}
+.day-hdr{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.day-name{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.day-date{font-size:11px;color:var(--text-dim);white-space:nowrap}
+.day-today .day-name{color:var(--accent)}
+.day-line{flex:1;height:1px;background:var(--border)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;margin-bottom:7px;display:flex;align-items:flex-start;gap:11px;transition:border-color .1s,background .2s}
+.card:hover{border-color:var(--border2)}
+.card-time{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--accent);min-width:38px;padding-top:1px}
+.card-body{flex:1;min-width:0}
+.card-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.card-meta{font-size:11px;color:var(--text-muted);margin-top:3px;display:flex;align-items:center;gap:5px}
+.card-obs{font-size:11px;color:var(--text-dim);margin-top:4px;font-style:italic;line-height:1.4}
+.badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px}
+.b-mio{background:rgba(0,212,170,.13);color:#00a882}
+[data-theme="dark"] .b-mio{color:#00d4aa}
+.b-mas{background:rgba(59,130,246,.13);color:#1a5fb4}
+[data-theme="dark"] .b-mas{color:#60a5fa}
+.b-ava{background:rgba(168,85,247,.13);color:#7b2d8b}
+[data-theme="dark"] .b-ava{color:#c084fc}
+.b-ret{background:rgba(227,179,65,.15);color:#b07a00}
+[data-theme="dark"] .b-ret{color:#e8b400}
+.b-mob{background:rgba(249,115,22,.13);color:#b04a00}
+[data-theme="dark"] .b-mob{color:#fb923c}
+.b-out{background:rgba(107,114,128,.13);color:#555}
+[data-theme="dark"] .b-out{color:#9ca3af}
+.del-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;padding:5px;border-radius:6px;font-size:13px;line-height:1;transition:.1s;flex-shrink:0}
+.del-btn:hover{color:var(--danger);background:rgba(248,81,73,.1)}
+
+/* ── LOADING ──────────────────────────────────────────────────────────── */
+.loading-row{display:flex;align-items:center;gap:10px;padding:20px 0;color:var(--text-muted);font-size:13px}
+.spinner{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .65s linear infinite;flex-shrink:0}
+.sync-banner{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:14px}
+
+/* ── EMPTY ────────────────────────────────────────────────────────────── */
+.empty{text-align:center;padding:44px 24px;color:var(--text-dim)}
+.empty svg{display:block;margin:0 auto 12px;opacity:.5}
+.empty p{font-size:13px;line-height:1.6}
+
+/* ── TOAST ────────────────────────────────────────────────────────────── */
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:10px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;transition:transform .25s cubic-bezier(.34,1.5,.64,1);white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:var(--accent);color:var(--accent)}
+.toast.err{border-color:var(--danger);color:var(--danger)}
+
+/* ── DIALOG ───────────────────────────────────────────────────────────── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:flex;align-items:flex-end;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.show{opacity:1;pointer-events:all}
+.dialog{background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:20px;width:100%;max-width:380px;transform:translateY(20px);transition:transform .2s,background .2s}
+.overlay.show .dialog{transform:translateY(0)}
+.dialog h4{font-size:15px;font-weight:700;margin-bottom:5px;color:var(--text)}
+.dialog p{font-size:13px;color:var(--text-muted);margin-bottom:18px;line-height:1.5}
+.dialog-btns{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.btn-cancel{padding:11px;background:var(--surface);border:1px solid var(--border);border-radius:9px;color:var(--text-muted);font-family:inherit;font-size:13px;cursor:pointer;font-weight:500}
+.btn-confirm{padding:11px;background:var(--danger);border:none;border-radius:9px;color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
+
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<datalist id="dl-pac"></datalist>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+        <path d="M10 2C6.13 2 3 5.13 3 9c0 2.5 1.28 4.71 3.22 6.01L5.5 18h9l-.72-2.99C15.72 13.71 17 11.5 17 9c0-3.87-3.13-7-7-7z" stroke="#00d4aa" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
+        <path d="M7.5 9.5h5M10 7v5" stroke="#00d4aa" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="logo-text">Agenda<em>Fisio</em></span>
+  </div>
+  <div class="header-right">
+    <div class="sync-pill">
+      <div class="sdot" id="sdot"></div>
+      <span id="slabel">pronto</span>
+    </div>
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Alternar tema">
+      <span id="theme-icon">☀</span>
+    </button>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" id="tab-form-btn" onclick="setTab('form')">Novo agendamento</button>
+  <button class="tab" id="tab-agenda-btn" onclick="setTab('agenda')">Agenda semanal</button>
+</div>
+
+<div class="main">
+
+  <!-- FORM -->
+  <div id="view-form">
+    <div class="field">
+      <label>Paciente</label>
+      <input type="text" id="f-pac" list="dl-pac" placeholder="Nome completo" autocomplete="off">
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Data</label>
+        <input type="date" id="f-data">
+      </div>
+      <div class="field">
+        <label>Horário</label>
+        <input type="time" id="f-hora">
+      </div>
+    </div>
+    <div class="field">
+      <label>Tipo de serviço</label>
+      <select id="f-svc">
+        <option>Liberação Miofascial</option>
+        <option>Massagem Desportiva</option>
+        <option>Avaliação Inicial</option>
+        <option>Retorno</option>
+        <option>Mobilização Articular</option>
+        <option>Outro</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Duração</label>
+      <select id="f-dur">
+        <option>30 min</option>
+        <option>45 min</option>
+        <option selected>60 min</option>
+        <option>90 min</option>
+        <option>120 min</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Observações</label>
+      <textarea id="f-obs" placeholder="Região de tratamento, histórico, queixas..."></textarea>
+    </div>
+    <button class="btn-main" id="btn-ag" onclick="agendar()">Confirmar agendamento</button>
+  </div>
+
+  <!-- AGENDA -->
+  <div id="view-agenda" class="hidden">
+    <div class="week-nav">
+      <button class="wbtn" onclick="moveWeek(-1)">&#8249;</button>
+      <div class="wk-center">
+        <div class="wk-label" id="wk-label">—</div>
+        <div class="wk-sub" id="wk-sub">—</div>
+      </div>
+      <button class="wbtn" onclick="moveWeek(1)">&#8250;</button>
+    </div>
+    <div id="agenda-body"></div>
+  </div>
+
+</div>
+
+<div class="overlay" id="overlay" onclick="closeDialog()">
+  <div class="dialog" onclick="event.stopPropagation()">
+    <h4>Remover agendamento?</h4>
+    <p id="dlg-info"></p>
+    <div class="dialog-btns">
+      <button class="btn-cancel" onclick="closeDialog()">Cancelar</button>
+      <button class="btn-confirm" onclick="doDelete()">Remover</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbz91OHv8iHXBRxmHjsmRU-igkNde6xMEQtIgcJ5DKS8nShOJrxg2TfDnpGrFS69Pqw/exec';
+const CACHE_KEY  = 'agfisio_appts_v2';
+const THEME_KEY  = 'agfisio_theme';
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let appts      = JSON.parse(localStorage.getItem(CACHE_KEY) || '[]');
+let weekOffset = 0;
+let deleteId   = null;
+let isFetching = false;
+
+// ── THEME ─────────────────────────────────────────────────────────────────
+function initTheme() {
+  const saved = localStorage.getItem(THEME_KEY) || 'dark';
+  applyTheme(saved);
+}
+
+function toggleTheme() {
+  const curr = document.documentElement.getAttribute('data-theme');
+  applyTheme(curr === 'dark' ? 'light' : 'dark');
+}
+
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem(THEME_KEY, t);
+  document.getElementById('theme-icon').textContent = t === 'dark' ? '☀' : '☾';
+  document.getElementById('meta-theme').content = t === 'dark' ? '#0d1117' : '#f4f6f8';
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────
+const saveCache = () => localStorage.setItem(CACHE_KEY, JSON.stringify(appts));
+const uid       = () => Date.now().toString(36) + Math.random().toString(36).slice(2,5);
+const isoToday  = () => new Date().toISOString().split('T')[0];
+const isoDate   = d  => d.toISOString().split('T')[0];
+const DIAS_FULL = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+const MESES     = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+function weekStart(off) {
+  const d   = new Date();
+  const dow = d.getDay();
+  d.setDate(d.getDate() - dow + (dow === 0 ? -6 : 1) + off * 7);
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function weekNum(ds) {
+  const d = new Date(ds), j = new Date(d.getFullYear(),0,1);
+  return Math.ceil(((d-j)/86400000 + j.getDay()+1)/7);
+}
+
+function dayOfWeek(ds) {
+  const [y,m,d] = ds.split('-').map(Number);
+  return new Date(y,m-1,d).getDay();
+}
+
+function fmtDate(ds) {
+  const [y,m,d] = ds.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+function badgeClass(s) {
+  if(s.includes('Mio'))   return 'b-mio';
+  if(s.includes('Massa')) return 'b-mas';
+  if(s.includes('Avalia'))return 'b-ava';
+  if(s.includes('Retorno'))return 'b-ret';
+  if(s.includes('Mobili'))return 'b-mob';
+  return 'b-out';
+}
+
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + type;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.className='toast', 2800);
+}
+
+function setSync(s) {
+  const dot = document.getElementById('sdot');
+  const lbl = document.getElementById('slabel');
+  dot.className = 'sdot' + (s==='spin'?' spin':s==='err'?' err':'');
+  lbl.textContent = s==='spin'?'sincronizando...':s==='ok'?'atualizado':s==='err'?'offline':'pronto';
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────
+function setTab(t) {
+  const f = t==='form';
+  document.getElementById('view-form').classList.toggle('hidden',!f);
+  document.getElementById('view-agenda').classList.toggle('hidden',f);
+  document.getElementById('tab-form-btn').classList.toggle('active',f);
+  document.getElementById('tab-agenda-btn').classList.toggle('active',!f);
+  if(!f) { renderAgenda(); fetchFromSheets(); }
+}
+
+// ── FORM ──────────────────────────────────────────────────────────────────
+function initForm() {
+  document.getElementById('f-pac').value  = '';
+  document.getElementById('f-data').value = isoToday();
+  document.getElementById('f-hora').value = '08:00';
+  document.getElementById('f-obs').value  = '';
+  renderChips();
+}
+
+function renderChips() {
+  const recent = [...new Set(appts.map(a=>a.paciente))].slice(-6).reverse();
+  document.getElementById('dl-pac').innerHTML = recent.map(n=>`<option value="${n}">`).join('');
+  document.getElementById('chips').innerHTML  = recent.slice(0,5)
+    .map(n=>`<button class="chip" onclick="document.getElementById('f-pac').value='${n.replace(/'/g,"\\'")}'">${n}</button>`)
+    .join('');
+}
+
+async function agendar() {
+  const pac  = document.getElementById('f-pac').value.trim();
+  const data = document.getElementById('f-data').value;
+  const hora = document.getElementById('f-hora').value;
+  const svc  = document.getElementById('f-svc').value;
+  const dur  = document.getElementById('f-dur').value;
+  const obs  = document.getElementById('f-obs').value.trim();
+
+  if(!pac||!data||!hora){ toast('Preencha paciente, data e horário','err'); return; }
+
+  const d = new Date(data);
+  const appt = {
+    id:uid(), paciente:pac, data, hora, servico:svc, duracao:dur, obs,
+    diaSemana:DIAS_FULL[dayOfWeek(data)],
+    semana:weekNum(data), mes:d.getMonth()+1, ano:d.getFullYear(),
+    ts:new Date().toISOString()
+  };
+
+  // Otimistic: salva local primeiro
+  appts.push(appt);
+  appts.sort((a,b)=>(a.data+a.hora).localeCompare(b.data+b.hora));
+  saveCache();
+  toast('Agendado!','ok');
+  initForm();
+
+  // Envia pro Sheets
+  postToSheets(appt);
+}
+
+async function postToSheets(appt) {
+  setSync('spin');
+  try {
+    const body = new URLSearchParams();
+    Object.entries(appt).forEach(([k,v]) => body.append(k, v));
+    await fetch(SHEET_URL, { method:'POST', mode:'no-cors', body });
+    setSync('ok');
+  } catch(e) { setSync('err'); }
+}
+
+// ── FETCH DO SHEETS (JSONP) ────────────────────────────────────────────────
+function fetchFromSheets() {
+  if(isFetching) return;
+  isFetching = true;
+  setSync('spin');
+
+  // Mostra indicador no topo da agenda
+  const body = document.getElementById('agenda-body');
+  const existing = body.innerHTML;
+  const banner = `<div class="sync-banner"><div class="spinner"></div><span>Sincronizando com a planilha...</span></div>`;
+  body.innerHTML = banner + existing;
+
+  const cbName = 'agf_cb_' + Date.now();
+  const script  = document.createElement('script');
+
+  const timeout = setTimeout(() => {
+    cleanup();
+    setSync('err');
+    isFetching = false;
+    // Remove banner e mantém dados locais
+    removeBanner();
+  }, 10000);
+
+  function cleanup() {
+    delete window[cbName];
+    if(script.parentNode) script.parentNode.removeChild(script);
+    clearTimeout(timeout);
+  }
+
+  function removeBanner() {
+    const b = document.querySelector('.sync-banner');
+    if(b) b.remove();
+  }
+
+  window[cbName] = function(rows) {
+    cleanup();
+    isFetching = false;
+
+    if(!Array.isArray(rows) || rows.length === 0) {
+      setSync('ok');
+      removeBanner();
+      renderAgenda();
+      return;
+    }
+
+    // Mapeia colunas da planilha para o formato do app
+    const fromSheet = rows.map(r => ({
+      id:        r['ID']           || '',
+      paciente:  r['Paciente']     || '',
+      data:      r['Data']         || '',
+      hora:      r['Horário']      || '',
+      servico:   r['Serviço']      || '',
+      duracao:   r['Duração']      || '',
+      obs:       r['Observações']  || '',
+      diaSemana: r['Dia da Semana']|| '',
+      semana:    r['Semana']       || '',
+      mes:       r['Mês']          || '',
+      ano:       r['Ano']          || '',
+      ts:        r['Registrado em']|| '',
+    })).filter(a => a.paciente && a.data);
+
+    // Merge: Sheets é fonte de verdade; mantém pendentes locais não confirmados
+    const sheetIds = new Set(fromSheet.map(a=>a.id));
+    const localPending = appts.filter(a => !sheetIds.has(a.id));
+    appts = [...fromSheet, ...localPending]
+      .sort((a,b)=>(a.data+a.hora).localeCompare(b.data+b.hora));
+    saveCache();
+
+    setSync('ok');
+    removeBanner();
+    renderAgenda();
+  };
+
+  script.src = `${SHEET_URL}?action=getAll&callback=${cbName}&_=${Date.now()}`;
+  script.onerror = () => {
+    cleanup();
+    isFetching = false;
+    setSync('err');
+    removeBanner();
+  };
+  document.head.appendChild(script);
+}
+
+// ── AGENDA ────────────────────────────────────────────────────────────────
+function moveWeek(dir) { weekOffset += dir; renderAgenda(); }
+
+function renderAgenda() {
+  const start = weekStart(weekOffset);
+  const end   = new Date(start); end.setDate(end.getDate()+6);
+  const sL    = `${start.getDate()} ${MESES[start.getMonth()]}`;
+  const eL    = `${end.getDate()} ${MESES[end.getMonth()]} ${end.getFullYear()}`;
+
+  document.getElementById('wk-label').textContent = `${sL} – ${eL}`;
+  document.getElementById('wk-sub').textContent   =
+    weekOffset===0?'Semana atual':weekOffset===-1?'Semana passada':
+    weekOffset===1?'Próxima semana':`Semana ${weekOffset>0?'+':''}${weekOffset}`;
+
+  const days = [];
+  for(let i=0;i<7;i++){
+    const d=new Date(start); d.setDate(d.getDate()+i); days.push(isoDate(d));
+  }
+
+  const byDay = {};
+  days.forEach(d=>byDay[d]=[]);
+  appts.filter(a=>days.includes(a.data)).forEach(a=>byDay[a.data].push(a));
+  const active = days.filter(d=>byDay[d].length>0);
+
+  const body = document.getElementById('agenda-body');
+  // Preserve sync banner if present
+  const banner = body.querySelector('.sync-banner');
+
+  if(!active.length){
+    body.innerHTML = (banner?banner.outerHTML:'') + `<div class="empty">
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+        <rect x="6" y="10" width="32" height="28" rx="5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M14 6v8M30 6v8M6 20h32M14 29h8M14 33h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <p>Nenhum agendamento nesta semana</p>
+    </div>`;
+    return;
+  }
+
+  const html = active.map(ds => {
+    const today = ds === isoToday();
+    const sorted = byDay[ds].sort((a,b)=>a.hora.localeCompare(b.hora));
+    return `<div class="day-group">
+      <div class="day-hdr${today?' day-today':''}">
+        <span class="day-name">${DIAS_FULL[dayOfWeek(ds)]}</span>
+        <span class="day-date">${fmtDate(ds)}${today?' · Hoje':''}</span>
+        <div class="day-line"></div>
+      </div>
+      ${sorted.map(a=>`
+        <div class="card">
+          <span class="card-time">${a.hora}</span>
+          <div class="card-body">
+            <div class="card-name">${a.paciente}</div>
+            <div class="card-meta">
+              <span class="badge ${badgeClass(a.servico)}">${a.servico}</span>
+              <span>${a.duracao}</span>
+            </div>
+            ${a.obs?`<div class="card-obs">${a.obs}</div>`:''}
+          </div>
+          <button class="del-btn" onclick="askDelete('${a.id}')" title="Remover">✕</button>
+        </div>`).join('')}
+    </div>`;
+  }).join('');
+
+  body.innerHTML = (banner?banner.outerHTML:'') + html;
+}
+
+// ── DELETE ────────────────────────────────────────────────────────────────
+function askDelete(id) {
+  const a = appts.find(x=>x.id===id);
+  if(!a) return;
+  deleteId = id;
+  document.getElementById('dlg-info').textContent = `${a.paciente} — ${fmtDate(a.data)} às ${a.hora}`;
+  document.getElementById('overlay').classList.add('show');
+}
+function closeDialog(){ deleteId=null; document.getElementById('overlay').classList.remove('show'); }
+function doDelete(){
+  appts = appts.filter(a=>a.id!==deleteId);
+  saveCache(); closeDialog();
+  toast('Agendamento removido');
+  renderAgenda();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+initTheme();
+initForm();
+</script>
+</body>
+</html>
