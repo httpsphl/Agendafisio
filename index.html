@@ -2,131 +2,116 @@
 <html lang="pt-BR" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0d1117" id="meta-theme">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AgendaFisio">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>AgendaFisio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ── TOKENS ───────────────────────────────────────────────────────────── */
-[data-theme="dark"] {
-  --bg:          #0d1117;
-  --surface:     #161b22;
-  --surface2:    #1e2530;
-  --border:      rgba(255,255,255,0.08);
-  --border2:     rgba(255,255,255,0.14);
-  --accent:      #00d4aa;
-  --accent-dim:  rgba(0,212,170,0.12);
-  --accent-dim2: rgba(0,212,170,0.2);
-  --text:        #e6edf3;
-  --text-muted:  #7d8590;
-  --text-dim:    #484f58;
-  --danger:      #f85149;
-  --card-row-a:  #0f1f1c;
-  --card-row-b:  #161b22;
-  --badge-bg:    rgba(0,0,0,0.2);
-  --theme-icon:  "☀";
+[data-theme="dark"]{
+  --bg:#0d1117;--surface:#161b22;--surface2:#1e2530;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);
+  --accent:#00d4aa;--accent-dim:rgba(0,212,170,.12);--accent-dim2:rgba(0,212,170,.2);
+  --text:#e6edf3;--text-muted:#7d8590;--text-dim:#484f58;--danger:#f85149;
 }
-[data-theme="light"] {
-  --bg:          #f4f6f8;
-  --surface:     #ffffff;
-  --surface2:    #eef1f4;
-  --border:      rgba(0,0,0,0.08);
-  --border2:     rgba(0,0,0,0.14);
-  --accent:      #00a882;
-  --accent-dim:  rgba(0,168,130,0.1);
-  --accent-dim2: rgba(0,168,130,0.18);
-  --text:        #1a2332;
-  --text-muted:  #5a6a7a;
-  --text-dim:    #9aaabb;
-  --danger:      #d93025;
-  --card-row-a:  #f0fdfb;
-  --card-row-b:  #ffffff;
-  --badge-bg:    rgba(255,255,255,0.6);
-  --theme-icon:  "☾";
+[data-theme="light"]{
+  --bg:#f4f6f8;--surface:#fff;--surface2:#eef1f4;
+  --border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.14);
+  --accent:#00a882;--accent-dim:rgba(0,168,130,.1);--accent-dim2:rgba(0,168,130,.18);
+  --text:#1a2332;--text-muted:#5a6a7a;--text-dim:#9aaabb;--danger:#d93025;
 }
-
-/* ── RESET ────────────────────────────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overscroll-behavior:none}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;transition:background .2s,color .2s}
 
-/* ── HEADER ───────────────────────────────────────────────────────────── */
-.header{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:background .2s,border-color .2s}
-.logo{display:flex;align-items:center;gap:9px;flex-shrink:0}
+.header{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;transition:background .2s}
+.logo{display:flex;align-items:center;gap:9px}
 .logo-icon{width:32px;height:32px;background:var(--accent-dim2);border-radius:9px;display:flex;align-items:center;justify-content:center;border:1px solid var(--accent-dim2)}
-.logo-text{font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--text)}
+.logo-text{font-size:16px;font-weight:700;letter-spacing:-.01em}
 .logo-text em{font-style:normal;color:var(--accent)}
-.header-right{display:flex;align-items:center;gap:8px}
-.sync-pill{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:4px 9px;white-space:nowrap}
-.sdot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;transition:background .2s}
+.header-right{display:flex;align-items:center;gap:7px}
+.sync-pill{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:4px 9px}
+.sdot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0}
 .sdot.spin{animation:blink 1s ease-in-out infinite}
 .sdot.err{background:var(--danger)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.icon-btn:hover{border-color:var(--border2);color:var(--text)}
 
-/* Theme toggle */
-.theme-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0}
-.theme-btn:hover{border-color:var(--border2);color:var(--text)}
-
-/* ── TABS ─────────────────────────────────────────────────────────────── */
-.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:59px;z-index:99;transition:background .2s}
-.tab{flex:1;padding:11px 8px;text-align:center;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:58px;z-index:99;transition:background .2s}
+.tab{flex:1;padding:10px 4px;text-align:center;font-size:12px;font-weight:500;color:var(--text-muted);cursor:pointer;background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 
-/* ── MAIN ─────────────────────────────────────────────────────────────── */
-.main{padding:18px 16px;max-width:500px;margin:0 auto;padding-bottom:48px}
+.main{padding:16px;max-width:500px;margin:0 auto;padding-bottom:48px}
 
-/* ── FORM ─────────────────────────────────────────────────────────────── */
-.field{margin-bottom:13px}
+/* FORM */
+.field{margin-bottom:12px}
 .field label{display:block;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
-.field input,.field select,.field textarea{
-  width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;
-  color:var(--text);font-family:inherit;font-size:15px;padding:11px 13px;outline:none;
-  transition:border-color .12s,box-shadow .12s,background .2s;-webkit-appearance:none;appearance:none}
+.field input,.field select,.field textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:15px;padding:11px 13px;outline:none;transition:border-color .12s,box-shadow .12s,background .2s;-webkit-appearance:none;appearance:none}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
-.field textarea{min-height:72px;resize:vertical;line-height:1.5}
+.field textarea{min-height:68px;resize:vertical;line-height:1.5}
 .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237d8590' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;cursor:pointer}
 [data-theme="light"] .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6a7a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
-.field select option{background:var(--surface)}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
 .chip{font-size:12px;padding:3px 10px;border-radius:99px;background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);cursor:pointer;font-family:inherit;transition:.1s}
 .chip:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Conflict warning */
+.conflict-warn{display:none;align-items:flex-start;gap:8px;background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.3);border-radius:9px;padding:10px 12px;margin-bottom:12px;font-size:13px;color:var(--danger);line-height:1.4}
+.conflict-warn.show{display:flex}
+.conflict-warn svg{flex-shrink:0;margin-top:1px}
+
 .btn-main{width:100%;padding:14px;background:var(--accent);border:none;border-radius:10px;color:#0a0f14;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:.12s;margin-top:4px}
 .btn-main:hover{filter:brightness(1.06)}
 .btn-main:active{transform:scale(.99)}
 .btn-main.loading{color:transparent;position:relative}
 .btn-main.loading::after{content:'';position:absolute;width:18px;height:18px;border:2.5px solid #0a0f14;border-top-color:transparent;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);animation:spin-abs .65s linear infinite}
 @keyframes spin-abs{to{transform:translate(-50%,-50%) rotate(360deg)}}
-@keyframes spin-el{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes spin-el{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 
-/* ── WEEK NAV ─────────────────────────────────────────────────────────── */
-.week-nav{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 13px;margin-bottom:18px;transition:background .2s}
+/* WEEK NAV */
+.week-nav{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 12px;margin-bottom:16px;transition:background .2s}
 .wbtn{background:none;border:none;color:var(--text-muted);cursor:pointer;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:7px;font-size:20px;transition:.1s;font-family:inherit}
 .wbtn:hover{background:var(--surface2);color:var(--text)}
 .wk-center{text-align:center}
 .wk-label{font-size:13px;font-weight:600;color:var(--text)}
 .wk-sub{font-size:11px;color:var(--text-muted);margin-top:1px}
 
-/* ── AGENDA CARDS ─────────────────────────────────────────────────────── */
-.day-group{margin-bottom:22px}
-.day-hdr{display:flex;align-items:center;gap:9px;margin-bottom:9px}
-.day-name{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
-.day-date{font-size:11px;color:var(--text-dim);white-space:nowrap}
-.day-today .day-name{color:var(--accent)}
-.day-line{flex:1;height:1px;background:var(--border)}
+/* CARDS */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;transition:border-color .1s,background .2s}
 .card:hover{border-color:var(--border2)}
-.card-head{display:flex;align-items:center;justify-content:space-between;padding:11px 13px 10px;border-bottom:1px solid var(--border);gap:8px}
+.card.status-cancelado{opacity:.55}
+.card-head{display:flex;align-items:center;padding:11px 13px 9px;border-bottom:1px solid var(--border);gap:8px}
 .card-name{font-size:14px;font-weight:700;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.card-time{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--accent);flex-shrink:0}
+.card-time{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--accent);flex-shrink:0}
 .card-grid{display:grid;grid-template-columns:1fr 1fr;padding:10px 13px;gap:7px 12px}
 .card-field{display:flex;flex-direction:column;gap:2px;min-width:0}
 .card-field.full{grid-column:1/-1}
 .cf-label{font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em}
 .cf-val{font-size:12px;color:var(--text);line-height:1.3}
 .cf-val.obs{color:var(--text-muted);font-style:italic}
+.card-actions{display:flex;align-items:center;gap:6px;padding:8px 13px;border-top:1px solid var(--border)}
+
+/* STATUS BADGE */
+.status-btn{font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;border:1px solid;cursor:pointer;font-family:inherit;transition:.15s}
+.status-btn:hover{filter:brightness(1.1)}
+.status-aguardando{background:rgba(227,179,65,.15);color:#b07a00;border-color:rgba(227,179,65,.3)}
+[data-theme="dark"] .status-aguardando{color:#e8b400;border-color:rgba(232,180,0,.3)}
+.status-confirmado{background:rgba(0,212,170,.13);color:#00a882;border-color:rgba(0,212,170,.3)}
+[data-theme="dark"] .status-confirmado{color:#00d4aa;border-color:rgba(0,212,170,.3)}
+.status-cancelado{background:rgba(248,81,73,.1);color:#d93025;border-color:rgba(248,81,73,.25)}
+[data-theme="dark"] .status-cancelado{color:#f85149;border-color:rgba(248,81,73,.25)}
+
+.del-btn{margin-left:auto;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;border:1px solid var(--border);background:none;color:var(--text-muted);cursor:pointer;font-family:inherit;transition:.15s}
+.del-btn:hover{color:var(--danger);border-color:rgba(248,81,73,.4);background:rgba(248,81,73,.08)}
+
+/* SERVICE BADGE */
 .badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px}
 .b-mio{background:rgba(0,212,170,.13);color:#00a882}
 [data-theme="dark"] .b-mio{color:#00d4aa}
@@ -140,26 +125,62 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 [data-theme="dark"] .b-mob{color:#fb923c}
 .b-out{background:rgba(107,114,128,.13);color:#555}
 [data-theme="dark"] .b-out{color:#9ca3af}
-.del-btn{background:none;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:600;line-height:1.4;transition:.15s;flex-shrink:0;font-family:inherit}
-.del-btn:hover{color:var(--danger);background:rgba(248,81,73,.1);border-color:var(--danger)}
 
-/* ── LOADING ──────────────────────────────────────────────────────────── */
-.loading-row{display:flex;align-items:center;gap:10px;padding:20px 0;color:var(--text-muted);font-size:13px}
-.spinner{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin-el .65s linear infinite;flex-shrink:0}
-.sync-banner{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:14px}
+/* DAY GROUP */
+.day-group{margin-bottom:20px}
+.day-hdr{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.day-name{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.day-date{font-size:11px;color:var(--text-dim);white-space:nowrap}
+.day-today .day-name{color:var(--accent)}
+.day-line{flex:1;height:1px;background:var(--border)}
 
-/* ── EMPTY ────────────────────────────────────────────────────────────── */
+/* PATIENT HISTORY */
+.search-wrap{position:relative;margin-bottom:14px}
+.search-wrap input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:14px;padding:11px 13px 11px 38px;outline:none;transition:border-color .12s;-webkit-appearance:none}
+.search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-dim);pointer-events:none}
+.pac-list{display:flex;flex-direction:column;gap:8px}
+.pac-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;cursor:pointer;transition:.12s}
+.pac-card:hover{border-color:var(--border2)}
+.pac-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.pac-name{font-size:14px;font-weight:700;color:var(--text)}
+.pac-count{font-size:11px;font-weight:600;background:var(--accent-dim);color:var(--accent);padding:2px 8px;border-radius:99px}
+.pac-meta{font-size:12px;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap}
+.pac-detail{margin-top:16px}
+.pac-detail-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.back-btn{background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:8px;padding:5px 11px;font-size:12px;cursor:pointer;font-family:inherit;transition:.1s}
+.back-btn:hover{border-color:var(--border2);color:var(--text)}
+.pac-detail-name{font-size:16px;font-weight:700;color:var(--text)}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px;text-align:center}
+.stat-val{font-size:18px;font-weight:700;color:var(--accent)}
+.stat-lbl{font-size:10px;color:var(--text-muted);margin-top:2px;text-transform:uppercase;letter-spacing:.05em}
+.hist-item{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:10px}
+.hist-date{font-family:'DM Mono',monospace;font-size:12px;color:var(--text-muted);min-width:80px}
+.hist-body{flex:1;min-width:0}
+.hist-svc{font-size:13px;font-weight:600;color:var(--text)}
+.hist-dur{font-size:11px;color:var(--text-muted);margin-top:2px}
+.hist-status{font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;flex-shrink:0}
+
+/* SYNC BANNER */
+.sync-banner{display:none;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:14px}
+.sync-banner.show{display:flex}
+.spinner{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin-el .65s linear infinite;flex-shrink:0}
+
+/* EMPTY */
 .empty{text-align:center;padding:44px 24px;color:var(--text-dim)}
-.empty svg{display:block;margin:0 auto 12px;opacity:.5}
+.empty svg{display:block;margin:0 auto 12px;opacity:.4}
 .empty p{font-size:13px;line-height:1.6}
 
-/* ── TOAST ────────────────────────────────────────────────────────────── */
+/* TOAST */
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:10px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;transition:transform .25s cubic-bezier(.34,1.5,.64,1);white-space:nowrap;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast.ok{border-color:var(--accent);color:var(--accent)}
 .toast.err{border-color:var(--danger);color:var(--danger)}
+.toast.warn{border-color:#e8b400;color:#b07a00}
+[data-theme="dark"] .toast.warn{color:#e8b400}
 
-/* ── DIALOG ───────────────────────────────────────────────────────────── */
+/* DIALOG */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:flex;align-items:flex-end;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
 .overlay.show{opacity:1;pointer-events:all}
 .dialog{background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:20px;width:100%;max-width:380px;transform:translateY(20px);transition:transform .2s,background .2s}
@@ -167,8 +188,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .dialog h4{font-size:15px;font-weight:700;margin-bottom:5px;color:var(--text)}
 .dialog p{font-size:13px;color:var(--text-muted);margin-bottom:18px;line-height:1.5}
 .dialog-btns{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.btn-cancel{padding:11px;background:var(--surface);border:1px solid var(--border);border-radius:9px;color:var(--text-muted);font-family:inherit;font-size:13px;cursor:pointer;font-weight:500}
-.btn-confirm{padding:11px;background:var(--danger);border:none;border-radius:9px;color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.btn-cancel-dlg{padding:11px;background:var(--surface);border:1px solid var(--border);border-radius:9px;color:var(--text-muted);font-family:inherit;font-size:13px;cursor:pointer;font-weight:500}
+.btn-confirm-dlg{padding:11px;background:var(--danger);border:none;border-radius:9px;color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
 
 .hidden{display:none!important}
 </style>
@@ -188,38 +209,34 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <span class="logo-text">Agenda<em>Fisio</em></span>
   </div>
   <div class="header-right">
-    <div class="sync-pill">
-      <div class="sdot" id="sdot"></div>
-      <span id="slabel">pronto</span>
-    </div>
-    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Alternar tema">
-      <span id="theme-icon">☀</span>
-    </button>
+    <div class="sync-pill"><div class="sdot" id="sdot"></div><span id="slabel">pronto</span></div>
+    <button class="icon-btn" onclick="toggleTheme()" title="Alternar tema"><span id="theme-icon">☀</span></button>
   </div>
 </div>
 
 <div class="tabs">
-  <button class="tab active" id="tab-form-btn" onclick="setTab('form')">Novo agendamento</button>
-  <button class="tab" id="tab-agenda-btn" onclick="setTab('agenda')">Agenda semanal</button>
+  <button class="tab active" id="t-form"   onclick="setTab('form')">Novo</button>
+  <button class="tab"        id="t-agenda" onclick="setTab('agenda')">Agenda</button>
+  <button class="tab"        id="t-pac"    onclick="setTab('pac')">Pacientes</button>
 </div>
 
 <div class="main">
 
-  <!-- FORM -->
+  <!-- ── FORM ─────────────────────────────────────────────────────── -->
   <div id="view-form">
     <div class="field">
       <label>Paciente</label>
-      <input type="text" id="f-pac" list="dl-pac" placeholder="Nome completo" autocomplete="off">
+      <input type="text" id="f-pac" list="dl-pac" placeholder="Nome completo" autocomplete="off" oninput="onPacInput()">
       <div class="chips" id="chips"></div>
     </div>
     <div class="row2">
       <div class="field">
         <label>Data</label>
-        <input type="date" id="f-data">
+        <input type="date" id="f-data" onchange="checkConflict()">
       </div>
       <div class="field">
         <label>Horário</label>
-        <input type="time" id="f-hora">
+        <input type="time" id="f-hora" onchange="checkConflict()">
       </div>
     </div>
     <div class="field">
@@ -235,44 +252,65 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     </div>
     <div class="field">
       <label>Duração</label>
-      <select id="f-dur">
-        <option>30 min</option>
-        <option>45 min</option>
-        <option selected>60 min</option>
-        <option>90 min</option>
-        <option>120 min</option>
+      <select id="f-dur" onchange="checkConflict()">
+        <option>30 min</option><option>45 min</option>
+        <option selected>60 min</option><option>90 min</option><option>120 min</option>
       </select>
     </div>
     <div class="field">
       <label>Observações</label>
       <textarea id="f-obs" placeholder="Região de tratamento, histórico, queixas..."></textarea>
     </div>
+    <div class="conflict-warn" id="conflict-warn">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L14.5 13H1.5L8 1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 6v3.5M8 11.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span id="conflict-msg"></span>
+    </div>
     <button class="btn-main" id="btn-ag" onclick="agendar()">Confirmar agendamento</button>
   </div>
 
-  <!-- AGENDA -->
+  <!-- ── AGENDA ────────────────────────────────────────────────────── -->
   <div id="view-agenda" class="hidden">
-    <div id="sync-banner" class="sync-banner hidden"><div class="spinner"></div><span>Sincronizando com a planilha...</span></div>
+    <div id="sync-banner" class="sync-banner"><div class="spinner"></div><span>Sincronizando com a planilha...</span></div>
     <div class="week-nav">
       <button class="wbtn" onclick="moveWeek(-1)">&#8249;</button>
       <div class="wk-center">
         <div class="wk-label" id="wk-label">—</div>
-        <div class="wk-sub" id="wk-sub">—</div>
+        <div class="wk-sub"   id="wk-sub">—</div>
       </div>
       <button class="wbtn" onclick="moveWeek(1)">&#8250;</button>
     </div>
     <div id="agenda-body"></div>
   </div>
 
+  <!-- ── PACIENTES ─────────────────────────────────────────────────── -->
+  <div id="view-pac" class="hidden">
+    <div id="pac-list-view">
+      <div class="search-wrap">
+        <svg class="search-icon" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <input type="text" id="pac-search" placeholder="Buscar paciente..." oninput="renderPacList()" autocomplete="off">
+      </div>
+      <div class="pac-list" id="pac-list"></div>
+    </div>
+    <div id="pac-detail-view" class="hidden">
+      <div class="pac-detail-hdr">
+        <button class="back-btn" onclick="showPacList()">← Voltar</button>
+        <span class="pac-detail-name" id="pac-detail-name"></span>
+      </div>
+      <div class="stats-row" id="pac-stats"></div>
+      <div id="pac-hist"></div>
+    </div>
+  </div>
+
 </div>
 
+<!-- Dialog -->
 <div class="overlay" id="overlay" onclick="closeDialog()">
   <div class="dialog" onclick="event.stopPropagation()">
     <h4>Remover agendamento?</h4>
     <p id="dlg-info"></p>
     <div class="dialog-btns">
-      <button class="btn-cancel" onclick="closeDialog()">Cancelar</button>
-      <button class="btn-confirm" onclick="doDelete()">Remover</button>
+      <button class="btn-cancel-dlg" onclick="closeDialog()">Cancelar</button>
+      <button class="btn-confirm-dlg" onclick="doDelete()">Remover</button>
     </div>
   </div>
 </div>
@@ -280,360 +318,368 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast"></div>
 
 <script>
-// ── CONFIG ────────────────────────────────────────────────────────────────
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbz4ZjaaBZGj3z7QzkkesIYIYnZOISMShwUThZHqcm4M-Y_wK4cSAMk1XYkcOENJk0Za/exec';
-const CACHE_KEY  = 'agfisio_appts_v2';
-const THEME_KEY  = 'agfisio_theme';
+const CACHE_KEY = 'agfisio_v3';
+const THEME_KEY = 'agfisio_theme';
 
-// ── STATE ─────────────────────────────────────────────────────────────────
 let appts      = JSON.parse(localStorage.getItem(CACHE_KEY) || '[]');
 let weekOffset = 0;
 let deleteId   = null;
 let isFetching = false;
+const STATUS_CYCLE = ['aguardando','confirmado','cancelado'];
+const STATUS_LABEL = {aguardando:'⏳ Aguardando', confirmado:'✓ Confirmado', cancelado:'✗ Cancelado'};
 
 // ── THEME ─────────────────────────────────────────────────────────────────
-function initTheme() {
-  const saved = localStorage.getItem(THEME_KEY) || 'dark';
-  applyTheme(saved);
-}
-
-function toggleTheme() {
-  const curr = document.documentElement.getAttribute('data-theme');
-  applyTheme(curr === 'dark' ? 'light' : 'dark');
-}
-
-function applyTheme(t) {
-  document.documentElement.setAttribute('data-theme', t);
-  localStorage.setItem(THEME_KEY, t);
-  document.getElementById('theme-icon').textContent = t === 'dark' ? '☀' : '☾';
-  document.getElementById('meta-theme').content = t === 'dark' ? '#0d1117' : '#f4f6f8';
+function initTheme(){const t=localStorage.getItem(THEME_KEY)||'dark';applyTheme(t)}
+function toggleTheme(){applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark')}
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  localStorage.setItem(THEME_KEY,t);
+  document.getElementById('theme-icon').textContent=t==='dark'?'☀':'☾';
+  document.getElementById('meta-theme').content=t==='dark'?'#0d1117':'#f4f6f8';
 }
 
 // ── UTILS ─────────────────────────────────────────────────────────────────
-const saveCache = () => localStorage.setItem(CACHE_KEY, JSON.stringify(appts));
-const uid       = () => Date.now().toString(36) + Math.random().toString(36).slice(2,5);
-const isoToday  = () => new Date().toISOString().split('T')[0];
-const isoDate   = d  => d.toISOString().split('T')[0];
-const DIAS_FULL = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
-const MESES     = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const save    = ()=>localStorage.setItem(CACHE_KEY,JSON.stringify(appts));
+const uid     = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const today   = ()=>new Date().toISOString().split('T')[0];
+const isoDate = d=>d.toISOString().split('T')[0];
+const DIAS    = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+const MESES   = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const MESES_F = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-function weekStart(off) {
-  const d   = new Date();
-  const dow = d.getDay();
-  d.setDate(d.getDate() - dow + (dow === 0 ? -6 : 1) + off * 7);
-  d.setHours(0,0,0,0);
-  return d;
+function weekStart(off){
+  const d=new Date(),dow=d.getDay();
+  d.setDate(d.getDate()-dow+(dow===0?-6:1)+off*7);
+  d.setHours(0,0,0,0);return d;
+}
+function weekNum(ds){const d=new Date(ds),j=new Date(d.getFullYear(),0,1);return Math.ceil(((d-j)/86400000+j.getDay()+1)/7)}
+function dow(ds){const[y,m,d]=ds.split('-').map(Number);return new Date(y,m-1,d).getDay()}
+function fmtDate(ds){const[y,m,d]=ds.split('-');return`${d}/${m}/${y}`}
+function toMins(t){const[h,m]=t.split(':').map(Number);return h*60+m}
+function durMins(s){const x=String(s).match(/(\d+)/);return x?parseInt(x[1]):60}
+
+function badgeClass(s){
+  if(s.includes('Mio'))return'b-mio';if(s.includes('Massa'))return'b-mas';
+  if(s.includes('Avalia'))return'b-ava';if(s.includes('Retorno'))return'b-ret';
+  if(s.includes('Mobili'))return'b-mob';return'b-out';
 }
 
-function weekNum(ds) {
-  const d = new Date(ds), j = new Date(d.getFullYear(),0,1);
-  return Math.ceil(((d-j)/86400000 + j.getDay()+1)/7);
+function toast(msg,type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='toast show '+type;
+  clearTimeout(el._t);el._t=setTimeout(()=>el.className='toast',2800);
 }
 
-function dayOfWeek(ds) {
-  const [y,m,d] = ds.split('-').map(Number);
-  return new Date(y,m-1,d).getDay();
-}
-
-function fmtDate(ds) {
-  const [y,m,d] = ds.split('-');
-  return `${d}/${m}/${y}`;
-}
-
-function badgeClass(s) {
-  if(s.includes('Mio'))   return 'b-mio';
-  if(s.includes('Massa')) return 'b-mas';
-  if(s.includes('Avalia'))return 'b-ava';
-  if(s.includes('Retorno'))return 'b-ret';
-  if(s.includes('Mobili'))return 'b-mob';
-  return 'b-out';
-}
-
-function toast(msg, type='') {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast show ' + type;
-  clearTimeout(el._t);
-  el._t = setTimeout(() => el.className='toast', 2800);
-}
-
-function setSync(s) {
-  const dot = document.getElementById('sdot');
-  const lbl = document.getElementById('slabel');
-  dot.className = 'sdot' + (s==='spin'?' spin':s==='err'?' err':'');
-  lbl.textContent = s==='spin'?'sincronizando...':s==='ok'?'atualizado':s==='err'?'offline':'pronto';
+function setSync(s){
+  const dot=document.getElementById('sdot'),lbl=document.getElementById('slabel');
+  dot.className='sdot'+(s==='spin'?' spin':s==='err'?' err':'');
+  lbl.textContent=s==='spin'?'sincronizando...':s==='ok'?'atualizado':s==='err'?'offline':'pronto';
 }
 
 // ── TABS ──────────────────────────────────────────────────────────────────
-function setTab(t) {
-  const f = t==='form';
-  document.getElementById('view-form').classList.toggle('hidden',!f);
-  document.getElementById('view-agenda').classList.toggle('hidden',f);
-  document.getElementById('tab-form-btn').classList.toggle('active',f);
-  document.getElementById('tab-agenda-btn').classList.toggle('active',!f);
-  if(!f) { renderAgenda(); fetchFromSheets(); }
+function setTab(t){
+  ['form','agenda','pac'].forEach(id=>{
+    document.getElementById('view-'+id).classList.toggle('hidden',id!==t);
+    document.getElementById('t-'+id).classList.toggle('active',id===t);
+  });
+  if(t==='agenda'){renderAgenda();fetchFromSheets();}
+  if(t==='pac'){renderPacList();}
+}
+
+// ── CONFLICT DETECTION ────────────────────────────────────────────────────
+function checkConflict(){
+  const data=document.getElementById('f-data').value;
+  const hora=document.getElementById('f-hora').value;
+  const dur =document.getElementById('f-dur').value;
+  const warn=document.getElementById('conflict-warn');
+  const msg =document.getElementById('conflict-msg');
+  if(!data||!hora){warn.classList.remove('show');return;}
+  const ns=toMins(hora),ne=ns+durMins(dur);
+  const conflict=appts.find(a=>{
+    if(a.data!==data||a.status==='cancelado')return false;
+    const as=toMins(a.hora),ae=as+durMins(a.duracao);
+    return ns<ae&&ne>as;
+  });
+  if(conflict){
+    msg.textContent=`Conflito: ${conflict.paciente} já agendado às ${conflict.hora} (${conflict.duracao})`;
+    warn.classList.add('show');
+  }else{
+    warn.classList.remove('show');
+  }
 }
 
 // ── FORM ──────────────────────────────────────────────────────────────────
-function initForm() {
-  document.getElementById('f-pac').value  = '';
-  document.getElementById('f-data').value = isoToday();
-  document.getElementById('f-hora').value = '08:00';
-  document.getElementById('f-obs').value  = '';
+function initForm(){
+  document.getElementById('f-pac').value='';
+  document.getElementById('f-data').value=today();
+  document.getElementById('f-hora').value='08:00';
+  document.getElementById('f-obs').value='';
+  document.getElementById('conflict-warn').classList.remove('show');
   renderChips();
 }
 
-function renderChips() {
-  const recent = [...new Set(appts.map(a=>a.paciente))].slice(-6).reverse();
-  document.getElementById('dl-pac').innerHTML = recent.map(n=>`<option value="${n}">`).join('');
-  document.getElementById('chips').innerHTML  = recent.slice(0,5)
-    .map(n=>`<button class="chip" onclick="document.getElementById('f-pac').value='${n.replace(/'/g,"\\'")}'">${n}</button>`)
+function onPacInput(){
+  const dl=document.getElementById('dl-pac');
+  const recent=[...new Set(appts.map(a=>a.paciente))].reverse();
+  dl.innerHTML=recent.map(n=>`<option value="${n}">`).join('');
+}
+
+function renderChips(){
+  const recent=[...new Set(appts.map(a=>a.paciente))].slice(-5).reverse();
+  document.getElementById('chips').innerHTML=recent
+    .map(n=>`<button class="chip" onclick="document.getElementById('f-pac').value='${n.replace(/'/g,"\\'")};checkConflict()">${n}</button>`)
     .join('');
 }
 
-async function agendar() {
-  const pac  = document.getElementById('f-pac').value.trim();
-  const data = document.getElementById('f-data').value;
-  const hora = document.getElementById('f-hora').value;
-  const svc  = document.getElementById('f-svc').value;
-  const dur  = document.getElementById('f-dur').value;
-  const obs  = document.getElementById('f-obs').value.trim();
+async function agendar(){
+  const pac=document.getElementById('f-pac').value.trim();
+  const data=document.getElementById('f-data').value;
+  const hora=document.getElementById('f-hora').value;
+  const svc=document.getElementById('f-svc').value;
+  const dur=document.getElementById('f-dur').value;
+  const obs=document.getElementById('f-obs').value.trim();
+  if(!pac||!data||!hora){toast('Preencha paciente, data e horário','err');return;}
 
-  if(!pac||!data||!hora){ toast('Preencha paciente, data e horário','err'); return; }
+  // Block hard conflict (same exact slot)
+  const ns=toMins(hora),ne=ns+durMins(dur);
+  const exact=appts.find(a=>{
+    if(a.data!==data||a.status==='cancelado')return false;
+    return toMins(a.hora)===ns;
+  });
+  if(exact){toast(`⚠ Conflito exato com ${exact.paciente}. Ajuste o horário.`,'err');return;}
 
-  const d = new Date(data);
-  const appt = {
-    id:uid(), paciente:pac, data, hora, servico:svc, duracao:dur, obs,
-    diaSemana:DIAS_FULL[dayOfWeek(data)],
-    semana:weekNum(data), mes:d.getMonth()+1, ano:d.getFullYear(),
-    ts:new Date().toISOString(), _pending:true
+  const d=new Date(data);
+  const appt={
+    id:uid(),paciente:pac,data,hora,servico:svc,duracao:dur,obs,
+    diaSemana:DIAS[dow(data)],status:'aguardando',
+    semana:weekNum(data),mes:d.getMonth()+1,ano:d.getFullYear(),
+    ts:new Date().toISOString(),_pending:true
   };
-
-  // Otimistic: salva local primeiro
   appts.push(appt);
   appts.sort((a,b)=>(a.data+a.hora).localeCompare(b.data+b.hora));
-  saveCache();
+  save();
   toast('Agendado!','ok');
   initForm();
-
-  // Envia pro Sheets
   postToSheets(appt);
 }
 
-async function postToSheets(appt) {
+// ── SHEETS: POST (create / delete / updateStatus) ─────────────────────────
+async function postToSheets(appt){
   setSync('spin');
-  try {
-    const body = new URLSearchParams();
-    Object.entries(appt).forEach(([k,v]) => { if(k!=='_pending') body.append(k,v); });
-    await fetch(SHEET_URL, { method:'POST', mode:'no-cors', body });
+  try{
+    const body=new URLSearchParams();
+    Object.entries(appt).forEach(([k,v])=>{if(k!=='_pending')body.append(k,v);});
+    await fetch(SHEET_URL,{method:'POST',mode:'no-cors',body});
     setSync('ok');
-  } catch(e) { setSync('err'); }
+  }catch(e){setSync('err');}
 }
 
-async function deleteFromSheets(id) {
-  if(!SHEET_URL || SHEET_URL.includes('COLE')) return;
-  try {
-    const body = new URLSearchParams({ action:'delete', id });
-    await fetch(SHEET_URL, { method:'POST', mode:'no-cors', body });
-  } catch(e) { /* offline — Sheets vai divergir até próxima sync */ }
+async function deleteFromSheets(id){
+  if(!SHEET_URL||SHEET_URL.includes('COLE'))return;
+  try{
+    await fetch(SHEET_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams({action:'delete',id})});
+  }catch(e){}
 }
 
-// ── FETCH DO SHEETS (JSONP) ────────────────────────────────────────────────
-function fetchFromSheets() {
-  if(isFetching) return;
-  isFetching = true;
-  setSync('spin');
+async function updateStatusInSheets(id,status){
+  if(!SHEET_URL||SHEET_URL.includes('COLE'))return;
+  try{
+    await fetch(SHEET_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams({action:'updateStatus',id,status})});
+  }catch(e){}
+}
 
-  // Mostra indicador no topo da agenda
-  document.getElementById('sync-banner').classList.remove('hidden');
+// ── SHEETS: GET (JSONP) ───────────────────────────────────────────────────
+function normDate(s){
+  if(!s)return'';s=String(s).trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+  const dmy=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if(dmy)return`${dmy[3]}-${dmy[2].padStart(2,'0')}-${dmy[1].padStart(2,'0')}`;
+  const p=new Date(s);if(!isNaN(p))return p.toISOString().split('T')[0];
+  return s;
+}
 
-  const cbName = 'agf_cb_' + Date.now();
-  const script  = document.createElement('script');
-
-  const timeout = setTimeout(() => {
-    cleanup();
-    setSync('err');
-    isFetching = false;
-    // Remove banner e mantém dados locais
-    removeBanner();
-  }, 10000);
-
-  function cleanup() {
-    delete window[cbName];
-    if(script.parentNode) script.parentNode.removeChild(script);
-    clearTimeout(timeout);
-  }
-
-  function removeBanner() {
-    document.getElementById('sync-banner').classList.add('hidden');
-  }
-
-  window[cbName] = function(rows) {
-    cleanup();
-    isFetching = false;
-
-    if(!Array.isArray(rows) || rows.length === 0) {
-      setSync('ok');
-      removeBanner();
-      renderAgenda();
-      return;
-    }
-
-    // Normaliza datas: Sheets pode retornar "Mon Apr 14 2026...", DD/MM/YYYY ou YYYY-MM-DD
-    function normDate(s) {
-      if (!s) return '';
-      s = String(s).trim();
-      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s; // já OK
-      const dmy = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-      if (dmy) return `${dmy[3]}-${dmy[2].padStart(2,'0')}-${dmy[1].padStart(2,'0')}`;
-      const parsed = new Date(s);
-      if (!isNaN(parsed.getTime())) return parsed.toISOString().split('T')[0];
-      return s;
-    }
-    // Mapeia colunas da planilha para o formato do app
-    const fromSheet = rows.map(r => ({
-      id:        r['ID']            || r['Id']           || '',
-      paciente:  r['Paciente']      || '',
-      data:      normDate(r['Data'] || ''),
-      hora:      r['Horário']       || r['Horario']      || '',
-      servico:   r['Serviço']       || r['Servico']      || '',
-      duracao:   r['Duração']       || r['Duracao']      || '',
-      obs:       r['Observações']   || r['Observacoes']  || '',
-      diaSemana: r['Dia da Semana'] || '',
-      semana:    r['Semana']        || '',
-      mes:       r['Mês']           || r['Mes']          || '',
-      ano:       r['Ano']           || '',
-      ts:        r['Registrado em'] || '',
-    })).filter(a => a.paciente && a.data);
-
-    // Merge: Sheets é fonte de verdade.
-    // Mantém apenas itens _pending (recém criados, ainda não confirmados pelo Sheets).
-    // Se um ID já apareceu no Sheets antes (não é _pending), e sumiu do Sheets → foi deletado lá → remove do app também.
-    const sheetIds = new Set(fromSheet.map(a=>a.id));
-    const trulyPending = appts.filter(a => a._pending && !sheetIds.has(a.id));
-    // Itens do Sheets que já estavam locais como _pending → agora confirmados → strip flag
-    const confirmed = fromSheet.map(a => ({...a, _pending:false}));
-    appts = [...confirmed, ...trulyPending]
+function fetchFromSheets(){
+  if(isFetching)return;
+  isFetching=true;setSync('spin');
+  document.getElementById('sync-banner').classList.add('show');
+  const cb='agf_'+Date.now();
+  const sc=document.createElement('script');
+  const to=setTimeout(()=>{cleanup();setSync('err');isFetching=false;hideBanner();},10000);
+  function cleanup(){delete window[cb];sc.parentNode&&sc.parentNode.removeChild(sc);clearTimeout(to);}
+  function hideBanner(){document.getElementById('sync-banner').classList.remove('show');}
+  window[cb]=rows=>{
+    cleanup();isFetching=false;
+    if(!Array.isArray(rows)||!rows.length){setSync('ok');hideBanner();return;}
+    const fromSheet=rows.map(r=>({
+      id:r['ID']||'',paciente:r['Paciente']||'',
+      data:normDate(r['Data']||''),hora:r['Horário']||r['Horario']||'',
+      servico:r['Serviço']||r['Servico']||'',duracao:r['Duração']||r['Duracao']||'',
+      obs:r['Observações']||r['Observacoes']||'',diaSemana:r['Dia da Semana']||'',
+      semana:r['Semana']||'',mes:r['Mês']||r['Mes']||'',ano:r['Ano']||'',
+      status:(r['Status']||'aguardando').toLowerCase(),ts:r['Registrado em']||'',
+    })).filter(a=>a.paciente&&a.data);
+    const sheetIds=new Set(fromSheet.map(a=>a.id));
+    const pending=appts.filter(a=>a._pending&&!sheetIds.has(a.id));
+    appts=[...fromSheet.map(a=>({...a,_pending:false})),...pending]
       .sort((a,b)=>(a.data+a.hora).localeCompare(b.data+b.hora));
-    saveCache();
-
-    setSync('ok');
-    removeBanner();
-    renderAgenda();
+    save();setSync('ok');hideBanner();renderAgenda();
   };
+  sc.onerror=()=>{cleanup();isFetching=false;setSync('err');hideBanner();};
+  sc.src=`${SHEET_URL}?action=getAll&callback=${cb}&_=${Date.now()}`;
+  document.head.appendChild(sc);
+}
 
-  script.src = `${SHEET_URL}?action=getAll&callback=${cbName}&_=${Date.now()}`;
-  script.onerror = () => {
-    cleanup();
-    isFetching = false;
-    setSync('err');
-    removeBanner();
-  };
-  document.head.appendChild(script);
+// ── STATUS TOGGLE ─────────────────────────────────────────────────────────
+function cycleStatus(id){
+  const a=appts.find(x=>x.id===id);if(!a)return;
+  const next=STATUS_CYCLE[(STATUS_CYCLE.indexOf(a.status)+1)%3];
+  a.status=next;save();
+  updateStatusInSheets(id,next);
+  renderAgenda();
+  toast(`Status: ${STATUS_LABEL[next]}`,'ok');
 }
 
 // ── AGENDA ────────────────────────────────────────────────────────────────
-function moveWeek(dir) { weekOffset += dir; renderAgenda(); }
+function moveWeek(dir){weekOffset+=dir;renderAgenda();}
 
-function renderAgenda() {
-  const start = weekStart(weekOffset);
-  const end   = new Date(start); end.setDate(end.getDate()+6);
-  const sL    = `${start.getDate()} ${MESES[start.getMonth()]}`;
-  const eL    = `${end.getDate()} ${MESES[end.getMonth()]} ${end.getFullYear()}`;
-
-  document.getElementById('wk-label').textContent = `${sL} – ${eL}`;
-  document.getElementById('wk-sub').textContent   =
+function renderAgenda(){
+  const start=weekStart(weekOffset),end=new Date(start);
+  end.setDate(end.getDate()+6);
+  const sl=`${start.getDate()} ${MESES[start.getMonth()]}`;
+  const el=`${end.getDate()} ${MESES[end.getMonth()]} ${end.getFullYear()}`;
+  document.getElementById('wk-label').textContent=`${sl} – ${el}`;
+  document.getElementById('wk-sub').textContent=
     weekOffset===0?'Semana atual':weekOffset===-1?'Semana passada':
     weekOffset===1?'Próxima semana':`Semana ${weekOffset>0?'+':''}${weekOffset}`;
-
-  const days = [];
-  for(let i=0;i<7;i++){
-    const d=new Date(start); d.setDate(d.getDate()+i); days.push(isoDate(d));
-  }
-
-  const byDay = {};
-  days.forEach(d=>byDay[d]=[]);
+  const days=[];
+  for(let i=0;i<7;i++){const d=new Date(start);d.setDate(d.getDate()+i);days.push(isoDate(d));}
+  const byDay={};days.forEach(d=>byDay[d]=[]);
   appts.filter(a=>days.includes(a.data)).forEach(a=>byDay[a.data].push(a));
-  const active = days.filter(d=>byDay[d].length>0);
-
-  const body = document.getElementById('agenda-body');
-
+  const active=days.filter(d=>byDay[d].length>0);
+  const body=document.getElementById('agenda-body');
   if(!active.length){
-    body.innerHTML = `<div class="empty">
-      <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-        <rect x="6" y="10" width="32" height="28" rx="5" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M14 6v8M30 6v8M6 20h32M14 29h8M14 33h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-      <p>Nenhum agendamento nesta semana</p>
-    </div>`;
+    body.innerHTML=`<div class="empty"><svg width="44" height="44" viewBox="0 0 44 44" fill="none"><rect x="6" y="10" width="32" height="28" rx="5" stroke="currentColor" stroke-width="1.5"/><path d="M14 6v8M30 6v8M6 20h32M14 29h8M14 33h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><p>Nenhum agendamento nesta semana</p></div>`;
     return;
   }
-
-  const html = active.map(ds => {
-    const today = ds === isoToday();
-    const sorted = byDay[ds].sort((a,b)=>a.hora.localeCompare(b.hora));
-    return `<div class="day-group">
-      <div class="day-hdr${today?' day-today':''}">
-        <span class="day-name">${DIAS_FULL[dayOfWeek(ds)]}</span>
-        <span class="day-date">${fmtDate(ds)}${today?' · Hoje':''}</span>
+  body.innerHTML=active.map(ds=>{
+    const isToday=ds===today();
+    const sorted=byDay[ds].sort((a,b)=>a.hora.localeCompare(b.hora));
+    return`<div class="day-group">
+      <div class="day-hdr${isToday?' day-today':''}">
+        <span class="day-name">${DIAS[dow(ds)]}</span>
+        <span class="day-date">${fmtDate(ds)}${isToday?' · Hoje':''}</span>
         <div class="day-line"></div>
       </div>
       ${sorted.map(a=>`
-        <div class="card">
+        <div class="card status-${a.status||'aguardando'}">
           <div class="card-head">
             <span class="card-name">${a.paciente}</span>
             <span class="card-time">${a.hora}</span>
-            <button class="del-btn" onclick="askDelete('${a.id}')" title="Remover">Cancelar</button>
           </div>
           <div class="card-grid">
-            <div class="card-field">
-              <span class="cf-label">Data</span>
-              <span class="cf-val">${fmtDate(a.data)}</span>
-            </div>
-            <div class="card-field">
-              <span class="cf-label">Dia da semana</span>
-              <span class="cf-val">${a.diaSemana}</span>
-            </div>
-            <div class="card-field">
-              <span class="cf-label">Serviço</span>
-              <span class="cf-val"><span class="badge ${badgeClass(a.servico)}">${a.servico}</span></span>
-            </div>
-            <div class="card-field">
-              <span class="cf-label">Duração</span>
-              <span class="cf-val">${a.duracao}</span>
-            </div>
-            ${a.obs ? `<div class="card-field full">
-              <span class="cf-label">Observações</span>
-              <span class="cf-val obs">${a.obs}</span>
-            </div>` : ''}
+            <div class="card-field"><span class="cf-label">Data</span><span class="cf-val">${fmtDate(a.data)}</span></div>
+            <div class="card-field"><span class="cf-label">Dia da semana</span><span class="cf-val">${a.diaSemana}</span></div>
+            <div class="card-field"><span class="cf-label">Serviço</span><span class="cf-val"><span class="badge ${badgeClass(a.servico)}">${a.servico}</span></span></div>
+            <div class="card-field"><span class="cf-label">Duração</span><span class="cf-val">${a.duracao}</span></div>
+            ${a.obs?`<div class="card-field full"><span class="cf-label">Observações</span><span class="cf-val obs">${a.obs}</span></div>`:''}
+          </div>
+          <div class="card-actions">
+            <button class="status-btn status-${a.status||'aguardando'}" onclick="cycleStatus('${a.id}')">${STATUS_LABEL[a.status||'aguardando']}</button>
+            <button class="del-btn" onclick="askDelete('${a.id}')">Cancelar sessão</button>
           </div>
         </div>`).join('')}
     </div>`;
   }).join('');
-
-  body.innerHTML = html;
 }
 
 // ── DELETE ────────────────────────────────────────────────────────────────
-function askDelete(id) {
-  const a = appts.find(x=>x.id===id);
-  if(!a) return;
-  deleteId = id;
-  document.getElementById('dlg-info').textContent = `${a.paciente} — ${fmtDate(a.data)} às ${a.hora}`;
+function askDelete(id){
+  const a=appts.find(x=>x.id===id);if(!a)return;
+  deleteId=id;
+  document.getElementById('dlg-info').textContent=`${a.paciente} — ${fmtDate(a.data)} às ${a.hora}`;
   document.getElementById('overlay').classList.add('show');
 }
-function closeDialog(){ deleteId=null; document.getElementById('overlay').classList.remove('show'); }
+function closeDialog(){deleteId=null;document.getElementById('overlay').classList.remove('show');}
 function doDelete(){
   deleteFromSheets(deleteId);
-  appts = appts.filter(a=>a.id!==deleteId);
-  saveCache(); closeDialog();
-  toast('Agendamento removido');
-  renderAgenda();
+  appts=appts.filter(a=>a.id!==deleteId);
+  save();closeDialog();toast('Agendamento removido');renderAgenda();
+}
+
+// ── PATIENT HISTORY ───────────────────────────────────────────────────────
+function renderPacList(){
+  const q=(document.getElementById('pac-search').value||'').toLowerCase().trim();
+  const byPac={};
+  appts.forEach(a=>{if(!byPac[a.paciente])byPac[a.paciente]=[];byPac[a.paciente].push(a);});
+  let pacs=Object.entries(byPac)
+    .filter(([n])=>!q||n.toLowerCase().includes(q))
+    .sort((a,b)=>{
+      const la=a[1].sort((x,y)=>y.data.localeCompare(x.data))[0].data;
+      const lb=b[1].sort((x,y)=>y.data.localeCompare(x.data))[0].data;
+      return lb.localeCompare(la);
+    });
+  const list=document.getElementById('pac-list');
+  if(!pacs.length){
+    list.innerHTML=`<div class="empty"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="14" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M6 34c0-7.732 6.268-14 14-14s14 6.268 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><p>${q?'Nenhum paciente encontrado':'Nenhum paciente ainda'}</p></div>`;
+    return;
+  }
+  list.innerHTML=pacs.map(([nome,sessions])=>{
+    const sorted=sessions.sort((a,b)=>b.data.localeCompare(a.data));
+    const last=sorted[0];
+    const totalMins=sessions.reduce((s,a)=>s+durMins(a.duracao),0);
+    const horas=Math.round(totalMins/60*10)/10;
+    return`<div class="pac-card" onclick="showPacDetail('${nome.replace(/'/g,"\\'")}')">
+      <div class="pac-card-top">
+        <span class="pac-name">${nome}</span>
+        <span class="pac-count">${sessions.length} sessões</span>
+      </div>
+      <div class="pac-meta">
+        <span>Última: ${fmtDate(last.data)}</span>
+        <span>${horas}h no total</span>
+        <span>${last.servico}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showPacDetail(nome){
+  const sessions=appts.filter(a=>a.paciente===nome).sort((a,b)=>b.data.localeCompare(a.data));
+  document.getElementById('pac-detail-name').textContent=nome;
+  // Stats
+  const totalMins=sessions.reduce((s,a)=>s+durMins(a.duracao),0);
+  const svcCount={};sessions.forEach(a=>svcCount[a.servico]=(svcCount[a.servico]||0)+1);
+  const topSvc=Object.entries(svcCount).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+  document.getElementById('pac-stats').innerHTML=`
+    <div class="stat-box"><div class="stat-val">${sessions.length}</div><div class="stat-lbl">Sessões</div></div>
+    <div class="stat-box"><div class="stat-val">${Math.round(totalMins/60*10)/10}h</div><div class="stat-lbl">Total</div></div>
+    <div class="stat-box"><div class="stat-val" style="font-size:11px;padding-top:4px">${topSvc.split(' ')[0]}</div><div class="stat-lbl">Serviço top</div></div>`;
+  // History list
+  document.getElementById('pac-hist').innerHTML=sessions.map(a=>`
+    <div class="hist-item">
+      <span class="hist-date">${fmtDate(a.data)} ${a.hora}</span>
+      <div class="hist-body">
+        <div class="hist-svc">${a.servico}</div>
+        <div class="hist-dur">${a.duracao}${a.obs?` · ${a.obs}`:''}</div>
+      </div>
+      <span class="hist-status status-${a.status||'aguardando'}" style="background:inherit">${STATUS_LABEL[a.status||'aguardando'].split(' ')[1]||'—'}</span>
+    </div>`).join('');
+  document.getElementById('pac-list-view').classList.add('hidden');
+  document.getElementById('pac-detail-view').classList.remove('hidden');
+}
+
+function showPacList(){
+  document.getElementById('pac-detail-view').classList.add('hidden');
+  document.getElementById('pac-list-view').classList.remove('hidden');
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 initTheme();
 initForm();
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
 </script>
 </body>
 </html>
